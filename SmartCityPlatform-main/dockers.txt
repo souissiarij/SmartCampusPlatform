@@ -1,0 +1,48 @@
+# -----------------------------
+# 1. Mobility (REST)
+# -----------------------------
+cd ./microservices/mobility-rest
+docker build -t mobility-service:latest .
+docker run -d --name mobility -p 3001:3001 mobility-service:latest
+
+# -----------------------------
+# 2. AirQuality (SOAP)
+# -----------------------------
+cd ../airquality-soap
+docker build -t airquality-service:latest .
+docker run -d --name airquality -p 3002:3002 airquality-service:latest
+
+# -----------------------------
+# 3. Citizen (GraphQL)
+# -----------------------------
+cd ../citizen-graphql
+docker build -t citizen-service:latest .
+docker run -d --name citizen -p 3003:3003 citizen-service:latest
+
+# -----------------------------
+# 4. Emergency (gRPC)
+# -----------------------------
+cd ../emergency-grpc
+docker build -t emergency-service:latest .
+docker run -d --name emergency -p 3004:3004 emergency-service:latest
+
+# -----------------------------
+# 5. Orchestrator
+# -----------------------------
+cd ../orchestrator-service
+docker build -t orchestrator-service:latest .
+docker run -d --name orchestrator -p 4000:4000 orchestrator-service:latest
+
+# -----------------------------
+# 6. API Gateway
+# -----------------------------
+cd ../api-gateway
+docker build -t gateway-service:latest .
+docker run -d --name gateway -p 8080:8080 gateway-service:latest
+
+# -----------------------------
+# 7. Frontend (Client Web)
+# -----------------------------
+cd ../../frontend-client
+docker build -t client-web:latest .
+docker run -d --name client-web -p 5173:5173 client-web:latest

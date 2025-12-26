@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # --- MICROSERVICES ---
+  mobility:
+    build: ./microservices/mobility-rest
+    container_name: mobility
+    ports: ["3001:3001"]
+    volumes:
+      - ./microservices/mobility-rest:/app  
+      - /app/node_modules                   
+      - ./data.db:/data.db                  
+    environment:
+      - DB_PATH=/data.db                    
+    networks:
+      - smart-city-net
+
+  people:
+    build: ./microservices/people
+    container_name: people
+    ports: ["3002:3002"]
+    volumes:
+      - ./microservices/people:/app
+      - /app/node_modules
+    networks:
+      - smart-city-net
+
+  citizen:
+    build: ./microservices/citizen-graphql
+    container_name: citizen
+    ports: ["3003:3003"]
+    volumes:
+      - ./microservices/citizen-graphql:/app
+      - /app/node_modules
+      - ./data.db:/data.db                  
+    environment:
+      - DB_PATH=/data.db                    
+    networks:
+      - smart-city-net
+
+  emergency:
+    build: ./microservices/emergency-grpc
+    container_name: emergency
+    ports: ["3004:3004"]
+    volumes:
+      - ./microservices/emergency-grpc:/app
+      - /app/node_modules
+      - ./data.db:/data.db                  
+    environment:
+      - DB_PATH=/data.db                  
+    networks:
+      - smart-city-net
+
+  # --- ORCHESTRATION & GATEWAY ---
+  orchestrator:
+    build: ./microservices/orchestrator-service
+    container_name: orchestrator
+    ports: ["4000:4000"]
+    depends_on: [mobility, people, citizen, emergency]
+    volumes:
+      - ./microservices/orchestrator-service:/app
+      - /app/node_modules
+    networks:
+      - smart-city-net
+
+  gateway:
+    build: ./microservices/api-gateway
+    container_name: gateway
+    ports: ["8080:8080"]
+    depends_on: [orchestrator]
+    volumes:
+      - ./microservices/api-gateway:/app
+      - /app/node_modules
+    networks:
+      - smart-city-net
+
+  # --- FRONTEND ---
+  client:
+    build: ./frontend-client
+    container_name: client-web
+    ports: ["5173:5173"]
+    depends_on: [gateway]
+    volumes:
+      - ./frontend-client:/app
+      - /app/node_modules
+    networks:
+      - smart-city-net
+
+networks:
+  smart-city-net:
+    driver: bridge

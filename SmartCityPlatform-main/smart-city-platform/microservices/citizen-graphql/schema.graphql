@@ -1,0 +1,14 @@
+#graphql
+  type Citizen {
+    id: ID!
+    name: String
+    email: String
+    isAsthmatic: Boolean
+  }
+  type Query {
+    citizens: [Citizen]
+    citizen(id: ID!): Citizen
+  }
+  type Mutation {
+    addCitizen(name: String, email: String, isAsthmatic: Boolean): Citizen
+  }

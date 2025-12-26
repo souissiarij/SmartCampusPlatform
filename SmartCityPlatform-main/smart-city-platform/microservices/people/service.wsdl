@@ -1,0 +1,53 @@
+<definitions name="PeopleService"
+             targetNamespace="http://www.examples.com/wsdl/PeopleService.wsdl"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://www.examples.com/wsdl/PeopleService.wsdl"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <message name="GetPeopleCountRequest">
+        <part name="city" type="xsd:string"/>
+    </message>
+    <message name="GetPeopleCountResponse">
+        <part name="peopleCount" type="xsd:int"/>
+        <part name="status" type="xsd:string"/>
+    </message>
+
+    <message name="ComparePeopleCountRequest">
+        <part name="city1" type="xsd:string"/>
+        <part name="city2" type="xsd:string"/>
+    </message>
+    <message name="ComparePeopleCountResponse">
+        <part name="result" type="xsd:string"/> </message>
+
+    <portType name="PeoplePortType">
+        <operation name="GetPeopleCount">
+            <input message="tns:GetPeopleCountRequest"/>
+            <output message="tns:GetPeopleCountResponse"/>
+        </operation>
+        <operation name="ComparePeopleCount">
+            <input message="tns:ComparePeopleCountRequest"/>
+            <output message="tns:ComparePeopleCountResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="PeopleBinding" type="tns:PeoplePortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetPeopleCount">
+            <soap:operation soapAction="GetPeopleCount"/>
+            <input><soap:body use="encoded" namespace="urn:examples:people" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+            <output><soap:body use="encoded" namespace="urn:examples:people" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+        </operation>
+        <operation name="ComparePeopleCount">
+            <soap:operation soapAction="ComparePeopleCount"/>
+            <input><soap:body use="encoded" namespace="urn:examples:people" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+            <output><soap:body use="encoded" namespace="urn:examples:people" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+        </operation>
+    </binding>
+
+    <service name="PeopleService">
+        <port name="PeoplePort" binding="tns:PeopleBinding">
+            <soap:address location="http://localhost:3002/wsdl"/>
+        </port>
+    </service>
+</definitions>

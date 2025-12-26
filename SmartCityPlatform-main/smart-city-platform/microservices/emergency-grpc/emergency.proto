@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package emergency;
+
+service EmergencyService {
+  rpc GetAlerts (Empty) returns (AlertList);
+  rpc AddAlert (AlertRequest) returns (AlertResponse);
+}
+
+message Empty {}
+
+message AlertRequest {
+  string type = 1;
+  string location = 2;
+  string severity = 3;
+  string description = 4;
+  string reporter = 5;
+  string phone = 6;
+  string injuries = 7;
+}
+
+message AlertResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Alert {
+  int32 id = 1;        
+  string type = 2;
+  string location = 3;
+  string severity = 4;
+  string description = 5;
+  string reporter = 6;
+  string time = 7;
+  string phone = 8;
+  string injuries = 9;
+}
+
+message AlertList {
+  repeated Alert alerts = 1;
+}
